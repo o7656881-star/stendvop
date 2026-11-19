@@ -1,0 +1,29 @@
+name: Build stendvop iOS
+
+on: [push]
+
+jobs:
+  build:
+    name: Build for iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Cache Unity
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-iOS
+          
+      - name: Build project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: iOS
+          
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: stendvop-build
+          path: build/iOS
